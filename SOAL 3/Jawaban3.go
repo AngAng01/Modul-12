@@ -13,23 +13,22 @@ func calculateMedian(A *datInt, N int) float64 {
 	return float64((*A)[N/2])
 }
 
-func insertSorted(A *datInt, N *int, value int) {
-	if *N >= MaxSize {
-		fmt.Println("Error: Array penuh.")
-		return
-	}
-	(*A)[*N] = value
-	*N++
-
-	for i := *N - 1; i > 0 && (*A)[i] < (*A)[i-1]; i-- {
-		(*A)[i], (*A)[i-1] = (*A)[i-1], (*A)[i]
+func selectionSort(A *datInt, N int) {
+	for i := 0; i < N-1; i++ {
+		minIdx := i
+		for j := i + 1; j < N; j++ {
+			if (*A)[j] < (*A)[minIdx] {
+				minIdx = j
+			}
+		}
+		(*A)[i], (*A)[minIdx] = (*A)[minIdx], (*A)[i]
 	}
 }
 
 func main() {
 	var data datInt
 	var size int
-	var zeroCount int 
+	var zeroCount int
 
 	for {
 		var input int
@@ -47,13 +46,20 @@ func main() {
 				fmt.Printf("Median saat ini: %.2f\n", median)
 			}
 
-			zeroCount++ 
-			if zeroCount == 2 { 
+			zeroCount++
+			if zeroCount == 2 {
 				break
 			}
-			
+
 		} else {
-			insertSorted(&data, &size, input)
+			if size >= MaxSize {
+				fmt.Println("Error: Array penuh.")
+				continue
+			}
+			data[size] = input
+			size++
+
+			selectionSort(&data, size)
 		}
 	}
 	fmt.Println("Selesai")
